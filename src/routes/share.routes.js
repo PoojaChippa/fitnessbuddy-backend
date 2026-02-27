@@ -1,0 +1,10 @@
+import express from "express";
+import { protect } from "../middleware/auth.middleware.js";
+import { shareProgress, getMyFeed } from "../controllers/share.controller.js";
+
+const router = express.Router();
+
+router.post("/", protect, shareProgress);
+router.get("/my", protect, getMyFeed);
+
+export default router;
