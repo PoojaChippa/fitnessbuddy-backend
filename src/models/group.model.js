@@ -220,20 +220,17 @@ export const getGroupLeaderboard = async (groupId) => {
     }));
 };
 
-export const deleteGroup = async (req, res, next) => {
-  try {
-    const { groupId } = req.params;
+export const deleteGroup = async ({ groupId, userId }) => {
+  const { data, error } = await supabase
+    .from("groups")
+    .delete()
+    .eq("id", groupId)
+    .eq("owner_id", userId);
 
-    await groupModel.deleteGroup({
-      groupId,
-      userId: req.user.id, // only owner can delete
-    });
-
-    res.json({
-      success: true,
-      message: "Group deleted successfully",
-    });
-  } catch (err) {
-    next(err);
+  if (error) {
+    console.error("DELETE GROUP ERROR:", error);
+    throw error;
   }
+
+  return data;
 };
