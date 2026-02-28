@@ -200,9 +200,13 @@ POST /api/auth/login
 
 ## 👤 User Routes
 
+### Update Profile
+
+GET /api/user
+
 ### Get Profile
 
-GET /api/user/profile
+GET /api/user
 
 (Protected Route)
 
@@ -214,9 +218,13 @@ GET /api/user/profile
 
 POST /api/workout
 
-### Get User Workouts
+### Get Workouts
 
 GET /api/workout
+
+### Get WorkoutStats
+
+GET/api/stats
 
 (Protected Routes)
 
@@ -232,9 +240,25 @@ POST /api/group
 
 POST /api/group/join
 
+### Log Group Workout
+
+POST /api/group/workout
+
+### Get My Groups
+
+GET /api/group/my
+
+### Get GroupStats
+
+GET /api/group/:groupId/stats
+
+### Get Group Progress
+
+GET /api/group/:groupId/progress
+
 ### Get Group Leaderboard
 
-GET /api/group/:id/leaderboard
+GET /api/group/:groupId/leaderboard
 
 ---
 
@@ -248,7 +272,77 @@ POST /api/challenge
 
 POST /api/challenge/join
 
+### Log Progress
+
+POST /api/challenge/log
+
+### Get My Challenges
+
+GET /api/challenge/my
+
+### Get Progress
+
+GET /api/challenge/:challengeId
+
+(Protected Routes)
+
 ---
+
+## 📊 Dashboard Routes
+
+### Get Dashboard
+
+GET /api/dashboard
+
+## (Protected Route)
+
+---
+
+## 🤝 Match Routes
+
+### Get Matches
+
+GET /api/matches
+
+(Protected Route)
+
+---
+
+## 💬 Message Routes
+
+### Send Message
+
+POST /api/message
+
+### Get Conversation
+
+GET api/message/:userId
+
+(Protected Routes)
+
+---
+
+## 📢 Share Routes
+
+### Share Progress
+
+POST api/share
+
+### Get My Feed
+
+GET api/share/my
+
+(Protected Routes)
+
+---
+
+## 🏢 Gym Routes
+
+### Get Near By Gyms
+
+GET /api/gym
+
+(Protected Route)
 
 ---
 

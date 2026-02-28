@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protect, addWorkout); // FIXED
+router.post("/", protect, addWorkout);
 router.get("/", protect, getWorkouts);
 router.get("/stats", protect, getWorkoutStats);
 
