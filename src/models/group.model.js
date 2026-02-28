@@ -234,3 +234,24 @@ export const deleteGroup = async ({ groupId, userId }) => {
 
   return true;
 };
+
+export const leaveGroup = async ({ groupId, userId }) => {
+  const { error } = await supabase
+    .from("group_members")
+    .delete()
+    .eq("group_id", groupId)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+};
+
+export const getGroupMembers = async (groupId) => {
+  const { data, error } = await supabase
+    .from("group_members")
+    .select("user_id, users(name)")
+    .eq("group_id", groupId);
+
+  if (error) throw error;
+
+  return data;
+};

@@ -138,3 +138,57 @@ export const deleteGroup = async (req, res, next) => {
     next(err);
   }
 };
+export const checkMembership = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+
+    const { data } = await supabase
+      .from("group_members")
+      .select("id")
+      .eq("group_id", groupId)
+      .eq("user_id", req.user.id)
+      .single();
+
+    res.json({
+      success: true,
+      data: !!data,
+    });
+  } catch (err) {
+    res.json({
+      success: true,
+      data: false,
+    });
+  }
+};
+
+export const leaveGroup = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+
+    await groupModel.leaveGroup({
+      groupId,
+      userId: req.user.id,
+    });
+
+    res.json({
+      success: true,
+      message: "Left group successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getGroupMembers = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+    const members = await groupModel.getGroupMembers(groupId);
+
+    res.json({
+      success: true,
+      data: members,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
