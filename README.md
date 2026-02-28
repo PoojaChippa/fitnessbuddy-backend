@@ -202,7 +202,7 @@ POST /api/auth/login
 
 ### Update Profile
 
-GET /api/user
+PUT /api/user
 
 ### Get Profile
 
@@ -224,7 +224,7 @@ GET /api/workout
 
 ### Get WorkoutStats
 
-GET/api/stats
+GET/api/workout/stats
 
 (Protected Routes)
 
