@@ -221,7 +221,7 @@ export const getGroupLeaderboard = async (groupId) => {
 };
 
 export const deleteGroup = async ({ groupId, userId }) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("groups")
     .delete()
     .eq("id", groupId)
@@ -232,5 +232,5 @@ export const deleteGroup = async ({ groupId, userId }) => {
     throw error;
   }
 
-  return data;
+  return true;
 };

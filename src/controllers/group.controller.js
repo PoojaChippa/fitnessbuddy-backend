@@ -123,18 +123,17 @@ export const getLeaderboard = async (req, res, next) => {
 
 export const deleteGroup = async (req, res, next) => {
   try {
-    const { groupId } = req.params;
+    console.log("Deleting group:", req.params.groupId);
+    console.log("User ID:", req.user.id);
 
     await groupModel.deleteGroup({
-      groupId,
-      userId: req.user.id, // only owner can delete
+      groupId: req.params.groupId,
+      userId: req.user.id,
     });
 
-    res.json({
-      success: true,
-      message: "Group deleted successfully",
-    });
+    res.json({ success: true });
   } catch (err) {
+    console.error("DELETE CONTROLLER ERROR:", err);
     next(err);
   }
 };
