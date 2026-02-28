@@ -43,33 +43,33 @@ export const register = async (req, res, next) => {
     next(err);
   }
 };
+
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await findUserByEmail(email); // however you're fetching
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (!user) {
+    if (error) {
       return res.status(401).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
-
-    const token = generateToken(user.id);
+    const token = jwt.sign({ id: data.user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.status(200).json({
+      success: true,
       token,
-      user,
+      user: data.user,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
