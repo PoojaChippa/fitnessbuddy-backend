@@ -6,11 +6,24 @@ import { successResponse } from "../utils/apiResponse.js";
 ========================= */
 export const addWorkout = async (req, res, next) => {
   try {
+    const { type, duration } = req.body;
+
+    // Simple calorie logic (can improve later)
+    const calorieMap = {
+      running: 10,
+      cycling: 8,
+      walking: 4,
+      gym: 6,
+    };
+
+    const caloriesPerMin = calorieMap[type?.toLowerCase()] || 5;
+    const calories = caloriesPerMin * Number(duration);
+
     const workout = await workoutModel.createWorkout({
       userId: req.user.id,
-      type: req.body.type,
-      duration: req.body.duration,
-      calories: req.body.calories,
+      type,
+      duration,
+      calories,
     });
 
     return successResponse(res, workout, 201);
@@ -49,6 +62,21 @@ export const getWorkoutStats = async (req, res, next) => {
     });
 
     return successResponse(res, stats);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteWorkout = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    await workoutModel.deleteWorkout({
+      id,
+      userId: req.user.id,
+    });
+
+    return successResponse(res, { message: "Workout deleted" });
   } catch (err) {
     next(err);
   }
