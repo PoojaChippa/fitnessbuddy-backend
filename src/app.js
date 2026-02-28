@@ -19,7 +19,6 @@ import { errorHandler } from "./middleware/error.middleware.js";
 const app = express();
 
 /* Middleware */
-app.use(express.json());
 app.use(helmet());
 
 app.use(
@@ -38,6 +37,7 @@ app.use(
     max: 100,
   }),
 );
+app.use(express.json());
 
 /* Routes */
 app.use("/api/auth", authRoutes);
