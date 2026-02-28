@@ -346,7 +346,3 @@ Advanced analytics dashboard
 # 🚀 Deployment Link
 
 To be added after production deployment.
-
-# 📄 License
-
-This project is developed for educational and production-ready portfolio purposes.
