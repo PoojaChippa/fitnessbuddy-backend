@@ -8,6 +8,7 @@ import {
   getMyGroups,
   getGroupStats,
   getLeaderboard,
+  deleteGroup,
 } from "../controllers/group.controller.js";
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.get("/my", protect, getMyGroups);
 router.get("/:groupId/stats", protect, getGroupStats);
 router.get("/:groupId/progress", protect, getGroupProgress);
 router.get("/:groupId/leaderboard", protect, getLeaderboard);
+router.delete("/:groupId", protect, deleteGroup);
 
 export default router;

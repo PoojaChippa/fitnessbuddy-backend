@@ -219,3 +219,21 @@ export const getGroupLeaderboard = async (groupId) => {
       rank: index + 1,
     }));
 };
+
+export const deleteGroup = async (req, res, next) => {
+  try {
+    const { groupId } = req.params;
+
+    await groupModel.deleteGroup({
+      groupId,
+      userId: req.user.id, // only owner can delete
+    });
+
+    res.json({
+      success: true,
+      message: "Group deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};

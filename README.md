@@ -260,6 +260,8 @@ GET /api/group/:groupId/progress
 
 GET /api/group/:groupId/leaderboard
 
+(Protected Routes)
+
 ---
 
 ## 🎯 Challenge Routes
@@ -294,7 +296,7 @@ GET /api/challenge/:challengeId
 
 GET /api/dashboard
 
-## (Protected Route)
+(Protected Route)
 
 ---
 
