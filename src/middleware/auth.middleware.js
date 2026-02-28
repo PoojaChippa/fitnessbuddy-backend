@@ -7,23 +7,26 @@ export const protect = (req, res, next) => {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
-        message: "Unauthorized: No token provided",
+        message: "No token provided",
       });
     }
 
     const token = authHeader.split(" ")[1];
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("DECODED TOKEN:", decoded);
-    req.user = decoded;
-    if (!decoded?.id) {
+
+    // 🔥 SUPPORT BOTH id and userId
+    const userId = decoded.id || decoded.userId;
+
+    if (!userId) {
       return res.status(401).json({
         success: false,
         message: "Invalid token payload",
       });
     }
 
-    req.user = decoded;
+    // Always normalize to id
+    req.user = { id: userId };
 
     next();
   } catch (err) {

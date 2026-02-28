@@ -5,7 +5,7 @@ export const getDashboardData = async (userId) => {
     .from("users")
     .select("*")
     .eq("id", userId)
-    .single();
+    .maybeSingle();
 
   if (userError) throw userError;
 
