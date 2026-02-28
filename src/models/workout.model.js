@@ -98,3 +98,22 @@ export const getWorkoutStats = async ({ userId }) => {
     totalDuration,
   };
 };
+
+/* =========================
+   DELETE WORKOUT
+========================= */
+
+export const deleteWorkout = async ({ id, userId }) => {
+  if (!id) throw new Error("Workout ID is required");
+  if (!userId) throw new Error("User ID is required");
+
+  const { error } = await supabase
+    .from("workouts")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+
+  return true;
+};
