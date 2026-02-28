@@ -387,7 +387,7 @@ http://localhost:5000
 
 6. After deployment:
 
-https://fitnessbuddy-backend.onrender.com
+https://fitnessbuddy-backend-d4rn.onrender.com
 
 # 🛡️ Error Handling & Security
 
@@ -439,4 +439,4 @@ Advanced analytics dashboard
 
 # 🚀 Deployment Link
 
-To be added after production deployment.
+https://fitnessbuddy-backend-d4rn.onrender.com
