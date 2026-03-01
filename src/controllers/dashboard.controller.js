@@ -1,3 +1,4 @@
+import { getDashboardData } from "../models/dashboard.model.js";
 export const getDashboard = async (req, res, next) => {
   try {
     const { user, workouts } = await getDashboardData(req.user.id);
