@@ -15,7 +15,6 @@ export const protect = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 🔥 SUPPORT BOTH id and userId
     const userId = decoded.id || decoded.userId;
 
     if (!userId) {

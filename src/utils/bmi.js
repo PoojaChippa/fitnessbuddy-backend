@@ -1,10 +1,22 @@
-export const calculateBMI = (weight, height) => {
-  const h = height / 100;
-  return Number((weight / (h * h)).toFixed(2));
+/* utils/bmi.js */
+
+export const calculateBMI = (weight, heightCm) => {
+  if (!weight || !heightCm) return null;
+  const heightM = heightCm / 100;
+  return Number((weight / (heightM * heightM)).toFixed(2));
 };
 
-export const estimateDays = (currentWeight, targetWeight, avgCalories) => {
-  const kg = currentWeight - targetWeight;
-  const calories = kg * 7700;
-  return Math.ceil(calories / avgCalories);
+export const calculateWeightLossFromCalories = (totalCalories) => {
+  return totalCalories / 7700; // 7700 kcal = 1kg fat
+};
+
+export const calculateTargetWeight = (targetBMI, heightCm) => {
+  if (!targetBMI || !heightCm) return null;
+  const heightM = heightCm / 100;
+  return Number((targetBMI * (heightM * heightM)).toFixed(2));
+};
+
+export const calculateEstimatedDays = (caloriesNeeded, avgDailyBurn) => {
+  if (!avgDailyBurn || avgDailyBurn <= 0) return null;
+  return Math.ceil(caloriesNeeded / avgDailyBurn);
 };

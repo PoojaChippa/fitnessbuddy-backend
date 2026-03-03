@@ -81,3 +81,23 @@ export const deleteWorkout = async (req, res, next) => {
     next(err);
   }
 };
+
+import { getWorkoutAnalytics } from "../models/workout.model.js";
+
+export const getAnalytics = async (req, res) => {
+  try {
+    const data = await getWorkoutAnalytics({
+      userId: req.user.id,
+    });
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
