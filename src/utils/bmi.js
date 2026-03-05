@@ -20,3 +20,12 @@ export const calculateEstimatedDays = (caloriesNeeded, avgDailyBurn) => {
   if (!avgDailyBurn || avgDailyBurn <= 0) return null;
   return Math.ceil(caloriesNeeded / avgDailyBurn);
 };
+export const getBMICategory = (bmi) => {
+  if (!bmi) return null;
+
+  if (bmi < 18.5) return "Underweight";
+  if (bmi >= 18.5 && bmi < 25) return "Normal";
+  if (bmi >= 25 && bmi < 30) return "Overweight";
+
+  return "Obese";
+};

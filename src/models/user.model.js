@@ -5,6 +5,7 @@ import {
   calculateWeightLossFromCalories,
   calculateTargetWeight,
   calculateEstimatedDays,
+  getBMICategory,
 } from "../utils/bmi.js";
 
 /* =========================
@@ -72,6 +73,8 @@ export const getUserAnalytics = async (userId) => {
 
   const currentBMI = calculateBMI(weight, height);
 
+  const bmiCategory = getBMICategory(currentBMI);
+
   const weightLossFromCalories = calculateWeightLossFromCalories(totalCalories);
 
   const simulatedWeight = weight - weightLossFromCalories;
@@ -127,6 +130,7 @@ export const getUserAnalytics = async (userId) => {
 
   return {
     currentBMI,
+    bmiCategory,
     simulatedBMI,
     targetBMI: target_bmi,
 
