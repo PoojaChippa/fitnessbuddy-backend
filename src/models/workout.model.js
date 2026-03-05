@@ -4,28 +4,6 @@ import { supabase } from "../config/supabase.js";
    CREATE WORKOUT
 ========================= */
 
-// export const createWorkout = async ({ userId, type, duration, calories }) => {
-//   if (!userId) throw new Error("User ID is required");
-//   if (!type) throw new Error("Workout type is required");
-
-//   const payload = {
-//     user_id: userId,
-//     type,
-//     duration: duration ?? 0,
-//     calories: calories ?? 0,
-//   };
-
-//   const { data, error } = await supabase
-//     .from("workouts")
-//     .insert(payload)
-//     .select()
-//     .single();
-
-//   if (error) throw error;
-
-//   return data;
-// };
-
 const CALORIE_MAP = {
   running: 10,
   cycling: 8,

@@ -1,4 +1,5 @@
 import { supabase } from "../config/supabase.js";
+
 import {
   calculateBMI,
   calculateWeightLossFromCalories,
@@ -36,12 +37,7 @@ export const getById = async (id) => {
 
   return data;
 };
-
-/* =========================
-   GET ALL USERS
-========================= */
 export const getUserAnalytics = async (userId) => {
-  // Get user
   const { data: user, error: userError } = await supabase
     .from("users")
     .select("*")
@@ -52,11 +48,14 @@ export const getUserAnalytics = async (userId) => {
 
   const { height, weight, target_bmi } = user;
 
-  if (!height || !weight) {
-    return { error: "Height and weight required" };
+  if (!height || !weight || !target_bmi) {
+    return { error: "Height, weight and target BMI required" };
   }
 
-  // Get workouts
+  /* =========================
+     GET WORKOUT DATA
+  ========================= */
+
   const { data: workouts, error: workoutError } = await supabase
     .from("workouts")
     .select("calories, created_at")
@@ -67,52 +66,78 @@ export const getUserAnalytics = async (userId) => {
 
   const totalCalories = workouts.reduce((sum, w) => sum + (w.calories || 0), 0);
 
-  //  Weight simulation
-  const weightLoss = calculateWeightLossFromCalories(totalCalories);
-  const simulatedWeight = weight - weightLoss;
+  /* =========================
+     BMI CALCULATIONS
+  ========================= */
 
   const currentBMI = calculateBMI(weight, height);
+
+  const weightLossFromCalories = calculateWeightLossFromCalories(totalCalories);
+
+  const simulatedWeight = weight - weightLossFromCalories;
+
   const simulatedBMI = calculateBMI(simulatedWeight, height);
 
-  let estimatedDays = null;
+  /* =========================
+     TARGET WEIGHT
+  ========================= */
+
+  const targetWeight = calculateTargetWeight(target_bmi, height);
+
   let weightToLose = null;
+  let weightToGain = null;
+  let estimatedDays = null;
 
-  if (target_bmi) {
-    const targetWeight = calculateTargetWeight(target_bmi, height);
+  const difference = targetWeight - weight;
 
-    weightToLose = weight - targetWeight;
+  /* =========================
+     AVG DAILY BURN
+  ========================= */
 
-    if (weightToLose > 0) {
-      const caloriesNeeded = weightToLose * 7700;
+  const avgDailyBurn =
+    workouts.length > 0 ? totalCalories / workouts.length : 300;
 
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  /* =========================
+     WEIGHT LOSS
+  ========================= */
 
-      const recentWorkouts = workouts.filter(
-        (w) => new Date(w.created_at) >= sevenDaysAgo,
-      );
+  if (difference < 0) {
+    weightToLose = Math.abs(difference);
 
-      const recentCalories = recentWorkouts.reduce(
-        (sum, w) => sum + (w.calories || 0),
-        0,
-      );
+    const caloriesNeeded = weightToLose * 7700;
 
-      const avgDailyBurn = recentCalories / 7;
-
-      estimatedDays = calculateEstimatedDays(caloriesNeeded, avgDailyBurn);
-    } else {
-      estimatedDays = 0;
-    }
+    estimatedDays = calculateEstimatedDays(caloriesNeeded, avgDailyBurn);
   }
+
+  /* =========================
+     WEIGHT GAIN
+  ========================= */
+
+  if (difference > 0) {
+    weightToGain = difference;
+
+    const weeklyGain = 0.4;
+
+    estimatedDays = Math.ceil((weightToGain / weeklyGain) * 7);
+  }
+
+  /* =========================
+     RETURN ANALYTICS
+  ========================= */
 
   return {
     currentBMI,
     simulatedBMI,
     targetBMI: target_bmi,
+
     totalCaloriesBurned: totalCalories,
+
     simulatedWeight: Number(simulatedWeight.toFixed(2)),
-    weightToLose:
-      weightToLose && weightToLose > 0 ? Number(weightToLose.toFixed(2)) : 0,
+
+    weightToLose: weightToLose ? Number(weightToLose.toFixed(2)) : null,
+
+    weightToGain: weightToGain ? Number(weightToGain.toFixed(2)) : null,
+
     estimatedDaysToTarget: estimatedDays,
   };
 };
