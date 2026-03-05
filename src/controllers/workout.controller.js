@@ -8,22 +8,10 @@ export const addWorkout = async (req, res, next) => {
   try {
     const { type, duration } = req.body;
 
-    // Simple calorie logic (can improve later)
-    const calorieMap = {
-      running: 10,
-      cycling: 8,
-      walking: 4,
-      gym: 6,
-    };
-
-    const caloriesPerMin = calorieMap[type?.toLowerCase()] || 5;
-    const calories = caloriesPerMin * Number(duration);
-
     const workout = await workoutModel.createWorkout({
       userId: req.user.id,
       type,
       duration,
-      calories,
     });
 
     return successResponse(res, workout, 201);
@@ -82,22 +70,14 @@ export const deleteWorkout = async (req, res, next) => {
   }
 };
 
-import { getWorkoutAnalytics } from "../models/workout.model.js";
-
-export const getAnalytics = async (req, res) => {
+export const getAnalytics = async (req, res, next) => {
   try {
-    const data = await getWorkoutAnalytics({
+    const data = await workoutModel.getWorkoutAnalytics({
       userId: req.user.id,
     });
 
-    res.status(200).json({
-      success: true,
-      data,
-    });
+    return successResponse(res, data);
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    next(err);
   }
 };
