@@ -7,11 +7,24 @@ export const findMatches = async (currentUser) => {
     .from("users")
     .select("id, goal, workout_type, city, gender")
     .eq("goal", goal)
-    .eq("workout_type", workout_type)
     .eq("city", city)
     .neq("id", id);
 
   if (error) throw error;
 
-  return data;
+  // Add compatibility score
+  const matchesWithScore = data.map((user) => {
+    let score = 80;
+
+    if (user.workout_type === workout_type) {
+      score += 20;
+    }
+
+    return {
+      ...user,
+      matchScore: score,
+    };
+  });
+
+  return matchesWithScore;
 };
