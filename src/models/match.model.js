@@ -5,7 +5,7 @@ export const findMatches = async (currentUser) => {
 
   const { data, error } = await supabase
     .from("users")
-    .select("id, goal, workout_type, city, gender")
+    .select("id, name, goal, workout_type, city, gender")
     .eq("goal", goal)
     .eq("city", city)
     .neq("id", id);
