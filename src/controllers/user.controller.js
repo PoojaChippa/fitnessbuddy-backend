@@ -80,3 +80,21 @@ export const getAnalytics = async (req, res) => {
     });
   }
 };
+
+/* =========================
+   GET USER BY ID
+========================= */
+export const getUserById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await userModel.getById(id);
+
+    res.json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

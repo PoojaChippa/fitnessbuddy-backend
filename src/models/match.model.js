@@ -9,7 +9,7 @@ export const findMatches = async (currentUser) => {
     .eq("goal", goal)
     .eq("city", city)
     .neq("id", id);
-
+  console.log("MATCH USERS:", data);
   if (error) throw error;
 
   // Add compatibility score
