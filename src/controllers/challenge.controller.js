@@ -12,7 +12,10 @@ export const createChallenge = async (req, res, next) => {
       target_value,
       owner_id: req.user.id,
     });
-
+    await challengeModel.joinChallenge({
+      challengeId: challenge.id,
+      userId: req.user.id,
+    });
     res.status(201).json({ success: true, data: challenge });
   } catch (err) {
     next(err);

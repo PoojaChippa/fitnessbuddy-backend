@@ -88,7 +88,7 @@ export const getChallengeProgress = async (challengeId, userId) => {
 export const getUserChallenges = async (userId) => {
   const { data: memberships, error } = await supabase
     .from("challenge_members")
-    .select("challenge_id, challenges(*)")
+    .select("challenge_id")
     .eq("user_id", userId);
 
   if (error) throw error;
@@ -97,27 +97,12 @@ export const getUserChallenges = async (userId) => {
 
   const challengeIds = memberships.map((m) => m.challenge_id);
 
-  const { data: logs } = await supabase
-    .from("challenge_logs")
-    .select("challenge_id, progress_value")
-    .eq("user_id", userId)
-    .in("challenge_id", challengeIds);
+  const { data: challenges, error: cError } = await supabase
+    .from("challenges")
+    .select("*")
+    .in("id", challengeIds);
 
-  return memberships.map((member) => {
-    const challenge = member.challenges;
+  if (cError) throw cError;
 
-    const totalProgress = logs
-      .filter((l) => l.challenge_id === challenge.id)
-      .reduce((sum, l) => sum + l.progress_value, 0);
-
-    const percentage = (totalProgress / challenge.target_value) * 100;
-
-    return {
-      id: challenge.id,
-      title: challenge.title,
-      targetValue: challenge.target_value,
-      totalProgress,
-      percentage: Math.min(100, Number(percentage.toFixed(2))),
-    };
-  });
+  return challenges;
 };
