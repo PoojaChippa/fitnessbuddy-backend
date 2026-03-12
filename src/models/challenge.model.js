@@ -106,7 +106,7 @@ export const getChallengeProgress = async (challengeId, userId) => {
 };
 
 /* =========================
-   GET ALL USER CHALLENGES
+   GET USER CHALLENGES
 ========================= */
 export const getUserChallenges = async (userId) => {
   const { data: memberships, error } = await supabase
@@ -116,13 +116,13 @@ export const getUserChallenges = async (userId) => {
 
   if (error) throw error;
 
-  if (!memberships.length) return [];
+  if (!memberships || memberships.length === 0) return [];
 
   const challengeIds = memberships.map((m) => m.challenge_id);
 
   const { data: challenges, error: cError } = await supabase
     .from("challenges")
-    .select("*")
+    .select("id, title, description, goal_type, target_value, owner_id")
     .in("id", challengeIds);
 
   if (cError) throw cError;
@@ -140,7 +140,12 @@ export const getUserChallenges = async (userId) => {
       .reduce((sum, l) => sum + l.progress_value, 0);
 
     return {
-      ...challenge,
+      id: challenge.id,
+      title: challenge.title,
+      description: challenge.description,
+      goal_type: challenge.goal_type,
+      target_value: challenge.target_value,
+      owner_id: challenge.owner_id,
       totalProgress,
     };
   });
