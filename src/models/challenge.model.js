@@ -199,7 +199,6 @@ export const exitChallenge = async ({ challengeId, userId }) => {
 /* =========================
    DELETE CHALLENGE
 ========================= */
-
 export const deleteChallenge = async (challengeId, userId) => {
   const { data: challenge, error: fetchError } = await supabase
     .from("challenges")
@@ -213,12 +212,32 @@ export const deleteChallenge = async (challengeId, userId) => {
     throw new Error("Not authorized");
   }
 
-  const { error } = await supabase
+  /* delete logs first */
+
+  const { error: logsError } = await supabase
+    .from("challenge_logs")
+    .delete()
+    .eq("challenge_id", challengeId);
+
+  if (logsError) throw logsError;
+
+  /* delete members */
+
+  const { error: membersError } = await supabase
+    .from("challenge_members")
+    .delete()
+    .eq("challenge_id", challengeId);
+
+  if (membersError) throw membersError;
+
+  /* delete challenge */
+
+  const { error: challengeError } = await supabase
     .from("challenges")
     .delete()
     .eq("id", challengeId);
 
-  if (error) throw error;
+  if (challengeError) throw challengeError;
 
   return { success: true };
 };
