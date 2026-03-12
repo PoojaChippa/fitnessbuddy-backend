@@ -106,3 +106,30 @@ export const getLeaderboard = async (req, res, next) => {
     next(err);
   }
 };
+
+/* DELETE CHALLENGE */
+export const deleteChallenge = async (req, res, next) => {
+  try {
+    await challengeModel.deleteChallenge(req.params.challengeId, req.user.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/* EXIT CHALLENGE */
+export const exitChallenge = async (req, res, next) => {
+  try {
+    const { challenge_id } = req.body;
+
+    await challengeModel.exitChallenge({
+      challengeId: challenge_id,
+      userId: req.user.id,
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+};

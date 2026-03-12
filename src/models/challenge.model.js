@@ -149,9 +149,6 @@ export const getUserChallenges = async (userId) => {
 /* =========================
    CHALLENGE LEADERBOARD
 ========================= */
-/* =========================
-   CHALLENGE LEADERBOARD
-========================= */
 export const getChallengeLeaderboard = async (challengeId) => {
   const { data, error } = await supabase
     .from("challenge_logs")
@@ -182,4 +179,46 @@ export const getChallengeLeaderboard = async (challengeId) => {
   return Object.values(leaderboard)
     .sort((a, b) => b.total - a.total)
     .slice(0, 5);
+};
+/* =========================
+   EXIT CHALLENGE
+========================= */
+
+export const exitChallenge = async ({ challengeId, userId }) => {
+  const { error } = await supabase
+    .from("challenge_members")
+    .delete()
+    .eq("challenge_id", challengeId)
+    .eq("user_id", userId);
+
+  if (error) throw error;
+
+  return { success: true };
+};
+
+/* =========================
+   DELETE CHALLENGE
+========================= */
+
+export const deleteChallenge = async (challengeId, userId) => {
+  const { data: challenge, error: fetchError } = await supabase
+    .from("challenges")
+    .select("*")
+    .eq("id", challengeId)
+    .single();
+
+  if (fetchError) throw fetchError;
+
+  if (challenge.owner_id !== userId) {
+    throw new Error("Not authorized");
+  }
+
+  const { error } = await supabase
+    .from("challenges")
+    .delete()
+    .eq("id", challengeId);
+
+  if (error) throw error;
+
+  return { success: true };
 };

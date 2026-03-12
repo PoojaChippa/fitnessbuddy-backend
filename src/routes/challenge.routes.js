@@ -8,6 +8,8 @@ import {
   getMyChallenges,
   getAllChallenges,
   getLeaderboard,
+  deleteChallenge,
+  exitChallenge,
 } from "../controllers/challenge.controller.js";
 
 const router = express.Router();
@@ -19,4 +21,7 @@ router.get("/my", protect, getMyChallenges);
 router.get("/:challengeId", protect, getProgress);
 router.get("/", protect, getAllChallenges);
 router.get("/leaderboard/:challengeId", protect, getLeaderboard);
+router.delete("/exit", protect, exitChallenge);
+router.delete("/:challengeId", protect, deleteChallenge);
+
 export default router;
