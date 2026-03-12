@@ -82,3 +82,27 @@ export const getMyChallenges = async (req, res, next) => {
   }
   console.log("JWT User ID:", req.user.id);
 };
+
+/* GET ALL CHALLENGES */
+export const getAllChallenges = async (req, res, next) => {
+  try {
+    const challenges = await challengeModel.getAllChallenges();
+
+    res.json({ success: true, data: challenges });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/* LEADERBOARD */
+export const getLeaderboard = async (req, res, next) => {
+  try {
+    const leaderboard = await challengeModel.getChallengeLeaderboard(
+      req.params.challengeId,
+    );
+
+    res.json({ success: true, data: leaderboard });
+  } catch (err) {
+    next(err);
+  }
+};

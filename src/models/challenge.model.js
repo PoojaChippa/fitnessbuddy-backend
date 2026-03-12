@@ -15,6 +15,19 @@ export const createChallenge = async (payload) => {
 };
 
 /* =========================
+   GET ALL CHALLENGES
+========================= */
+export const getAllChallenges = async () => {
+  const { data, error } = await supabase
+    .from("challenges")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+};
+/* =========================
    JOIN CHALLENGE
 ========================= */
 export const joinChallenge = async ({ challengeId, userId }) => {
@@ -105,4 +118,39 @@ export const getUserChallenges = async (userId) => {
   if (cError) throw cError;
 
   return challenges;
+};
+
+/* =========================
+   CHALLENGE LEADERBOARD
+========================= */
+export const getChallengeLeaderboard = async (challengeId) => {
+  const { data, error } = await supabase
+    .from("challenge_logs")
+    .select(
+      `
+      user_id,
+      progress_value,
+      users(name)
+    `,
+    )
+    .eq("challenge_id", challengeId);
+
+  if (error) throw error;
+
+  const leaderboard = {};
+
+  data.forEach((row) => {
+    if (!leaderboard[row.user_id]) {
+      leaderboard[row.user_id] = {
+        user: row.users?.name || "User",
+        total: 0,
+      };
+    }
+
+    leaderboard[row.user_id].total += row.progress_value;
+  });
+
+  return Object.values(leaderboard)
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 5);
 };
