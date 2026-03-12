@@ -31,6 +31,15 @@ export const getAllChallenges = async () => {
    JOIN CHALLENGE
 ========================= */
 export const joinChallenge = async ({ challengeId, userId }) => {
+  const { data: existing } = await supabase
+    .from("challenge_members")
+    .select("*")
+    .eq("challenge_id", challengeId)
+    .eq("user_id", userId)
+    .single();
+
+  if (existing) return existing;
+
   const { data, error } = await supabase
     .from("challenge_members")
     .insert({
@@ -41,6 +50,7 @@ export const joinChallenge = async ({ challengeId, userId }) => {
     .single();
 
   if (error) throw error;
+
   return data;
 };
 
@@ -117,9 +127,28 @@ export const getUserChallenges = async (userId) => {
 
   if (cError) throw cError;
 
-  return challenges;
+  const { data: logs, error: lError } = await supabase
+    .from("challenge_logs")
+    .select("challenge_id, progress_value")
+    .eq("user_id", userId);
+
+  if (lError) throw lError;
+
+  return challenges.map((challenge) => {
+    const totalProgress = logs
+      .filter((l) => l.challenge_id === challenge.id)
+      .reduce((sum, l) => sum + l.progress_value, 0);
+
+    return {
+      ...challenge,
+      totalProgress,
+    };
+  });
 };
 
+/* =========================
+   CHALLENGE LEADERBOARD
+========================= */
 /* =========================
    CHALLENGE LEADERBOARD
 ========================= */
