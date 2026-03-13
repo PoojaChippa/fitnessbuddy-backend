@@ -44,7 +44,7 @@ export const getAllChallenges = async () => {
 
   return data.map((c) => ({
     ...c,
-    participants: c.challenge_members[0]?.count || 0,
+    participants: c.challenge_members?.[0]?.count || 0,
   }));
 };
 /* =========================
