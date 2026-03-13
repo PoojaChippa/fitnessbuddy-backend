@@ -34,7 +34,12 @@ export const getAllChallenges = async () => {
     .from("challenges")
     .select(
       `
-      *,
+      id,
+      title,
+      description,
+      goal_type,
+      target_value,
+      owner_id,
       challenge_members(count)
     `,
     )
