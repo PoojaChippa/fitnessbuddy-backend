@@ -32,12 +32,20 @@ export const createChallenge = async (payload) => {
 export const getAllChallenges = async () => {
   const { data, error } = await supabase
     .from("challenges")
-    .select("*")
+    .select(
+      `
+      *,
+      challenge_members(count)
+    `,
+    )
     .order("created_at", { ascending: false });
 
   if (error) throw error;
 
-  return data;
+  return data.map((c) => ({
+    ...c,
+    participants: c.challenge_members[0]?.count || 0,
+  }));
 };
 /* =========================
    JOIN CHALLENGE
