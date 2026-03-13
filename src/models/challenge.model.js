@@ -11,6 +11,18 @@ export const createChallenge = async (payload) => {
     .single();
 
   if (error) throw error;
+
+  /* add creator as first participant */
+
+  const { error: memberError } = await supabase
+    .from("challenge_members")
+    .insert({
+      challenge_id: data.id,
+      user_id: payload.owner_id,
+    });
+
+  if (memberError) throw memberError;
+
   return data;
 };
 
