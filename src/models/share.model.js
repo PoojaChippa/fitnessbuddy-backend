@@ -27,15 +27,15 @@ export const getMyShares = async (userId) => {
     .from("shares")
     .select(
       `
-      id,
-      share_type,
-      reference_id,
-      created_at,
-      sender:sender_id(id, city),
-      receiver_id
-    `,
+    id,
+    share_type,
+    reference_id,
+    created_at,
+    sender:sender_id(id, city),
+    receiver_id
+  `,
     )
-    .eq("receiver_id", userId)
+    .or(`receiver_id.eq.${userId},sender_id.eq.${userId}`)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
