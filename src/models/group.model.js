@@ -107,7 +107,7 @@ export const logGroupWorkout = async ({
       user_id: userId,
       type,
       duration,
-      calories,
+      calories: calories || duration * 8,
     })
     .select()
     .single();
