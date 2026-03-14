@@ -21,6 +21,7 @@ export const createGroup = async (req, res, next) => {
 /* JOIN */
 export const joinGroup = async (req, res, next) => {
   try {
+    console.log("JOIN GROUP BODY:", req.body);
     const { group_id } = req.body;
 
     const member = await groupModel.joinGroup({
@@ -142,25 +143,19 @@ export const checkMembership = async (req, res, next) => {
   try {
     const { groupId } = req.params;
 
-    const { data } = await supabase
-      .from("group_members")
-      .select("id")
-      .eq("group_id", groupId)
-      .eq("user_id", req.user.id)
-      .single();
+    const isMember = await groupModel.checkMembership({
+      groupId,
+      userId: req.user.id,
+    });
 
     res.json({
       success: true,
-      data: !!data,
+      data: isMember,
     });
   } catch (err) {
-    res.json({
-      success: true,
-      data: false,
-    });
+    next(err);
   }
 };
-
 export const leaveGroup = async (req, res, next) => {
   try {
     const { groupId } = req.params;

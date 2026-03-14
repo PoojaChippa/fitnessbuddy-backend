@@ -50,7 +50,7 @@ export const joinGroup = async ({ groupId, userId }) => {
     .maybeSingle();
 
   if (existing) {
-    throw new Error("User already joined this group");
+    return existing;
   }
 
   // Check group capacity (max 5)
@@ -254,4 +254,17 @@ export const getGroupMembers = async (groupId) => {
   if (error) throw error;
 
   return data;
+};
+
+export const checkMembership = async ({ groupId, userId }) => {
+  const { data, error } = await supabase
+    .from("group_members")
+    .select("id")
+    .eq("group_id", groupId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return !!data;
 };
