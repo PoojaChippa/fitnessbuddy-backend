@@ -29,8 +29,6 @@ app.use(
   }),
 );
 
-app.options("*", cors());
-
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
