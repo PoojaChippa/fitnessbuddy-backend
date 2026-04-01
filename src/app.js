@@ -23,13 +23,13 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // Local development
-      "", // Production (later)
-    ],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
 );
+
+app.options("*", cors());
 
 app.use(
   rateLimit({
