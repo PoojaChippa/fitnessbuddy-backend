@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // Local development
-      "https://incandescent-peony-f9786d.netlify.app/", // Production (later)
+      "", // Production (later)
     ],
     credentials: true,
   }),
